@@ -15,8 +15,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir aws-sam-cli
 
-ENV SAM_CLI_CONTAINER_CONNECTION_TIMEOUT=60
-
 COPY . .
 
 EXPOSE 3001

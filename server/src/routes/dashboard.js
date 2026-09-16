@@ -12,7 +12,7 @@ router.get('/metrics', async (req, res) => {
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 70000);
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     const samResponse = await fetch(samApiUrl, {
         method: 'GET',
@@ -41,7 +41,7 @@ router.get('/metrics', async (req, res) => {
   } catch (samError) {
     if (samError.name === 'AbortError') {
         //Por ajustar
-        console.log('La petición fue abortada por tiempo de espera (superó los 70s).');
+        console.log('La petición fue abortada por tiempo de espera.');
     } else{
         console.log("Error general al ejecutar SAM Local");
 
