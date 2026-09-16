@@ -1,0 +1,26 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Instalar dependencias del sistema y herramientas necesarias
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    make \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalar AWS SAM CLI en un entorno virtual o directamente
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir aws-sam-cli
+
+ENV SAM_CLI_CONTAINER_CONNECTION_TIMEOUT=60
+
+COPY . .
+
+EXPOSE 3001
+
+# Command to start SAM Local API
+CMD ["sam", "local", "start-api", "-p", "3001", "--host", "0.0.0.0", "--skip-pull-image"]
+

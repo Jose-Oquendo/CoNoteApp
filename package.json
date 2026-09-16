@@ -1,0 +1,16 @@
+{
+  "name": "conote-root",
+  "version": "1.0.0",
+  "description": "CoNote - Team Portal with Post-it Board & AWS SAM Local Lambda Dashboard",
+  "private": true,
+  "scripts": {
+    "sam:build": "sam build",
+    "sam:api": "sam local start-api --port 3001",
+    "sam:invoke": "sam local invoke DashboardMetricsFunction -e events/dashboard-metrics-event.json",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down --rmi local --volumes --remove-orphans",
+    "cleanup": "cleanup.bat",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev"
+  }
+}

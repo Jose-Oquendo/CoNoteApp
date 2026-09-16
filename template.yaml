@@ -1,0 +1,128 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: AWS SAM Template for CoNote Team Portal - Lambda Dashboard Metrics & Cloud Architecture
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+    Runtime: nodejs20.x
+    Environment:
+      Variables:
+        NODE_ENV: production
+        DB_FILE_PATH: /tmp/db.json
+
+Parameters:
+  Environment:
+    Type: String
+    Default: development
+    AllowedValues:
+      - development
+      - staging
+      - production
+    Description: Environment stage for deployment
+
+Resources:
+  # -------------------------------------------------------------------
+  # 1. AWS Lambda Function: Dashboard Metrics
+  # -------------------------------------------------------------------
+  DashboardMetricsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: conote-dashboard-metrics
+      CodeUri: lambda/dashboard-metrics/
+      Handler: index.handler
+      Description: Calculates note metrics (total notes and breakdown by status) for the team portal dashboard
+      Events:
+        GetMetrics:
+          Type: HttpApi
+          Properties:
+            Path: /metrics
+            Method: GET
+
+  # -------------------------------------------------------------------
+  # 2. S3 Bucket for Frontend Hosting (Static Assets)
+  # -------------------------------------------------------------------
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "conote-frontend-hosting-${AWS::AccountId}-${AWS::Region}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+
+  # -------------------------------------------------------------------
+  # 3. CloudFront Distribution for Frontend Content Delivery
+  # -------------------------------------------------------------------
+  FrontendCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - Id: S3Origin
+            DomainName: !GetAtt FrontendBucket.RegionalDomainName
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: http-only
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+
+  # -------------------------------------------------------------------
+  # 4. Security Group & EC2 Instance for Dockerized API
+  # -------------------------------------------------------------------
+  ApiSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group allowing HTTP and SSH access for CoNote Express API
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 5000
+          ToPort: 5000
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  DashboardMetricsApiEndpoint:
+    Description: HTTP API Gateway endpoint for Dashboard Metrics Lambda
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/metrics"
+    Export:
+      Name: DashboardMetricsApiEndpoint
+
+  LambdaFunctionName:
+    Description: Lambda Function Logical Name
+    Value: !Ref DashboardMetricsFunction
+
+  FrontendS3WebsiteURL:
+    Description: URL of the S3 Static Website Hosting
+    Value: !GetAtt FrontendBucket.WebsiteURL
+
+  CloudFrontDistributionDomainName:
+    Description: Domain name of the CloudFront distribution
+    Value: !GetAtt FrontendCloudFrontDistribution.DomainName

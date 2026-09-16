@@ -1,0 +1,86 @@
+{
+  "users": [
+    {
+      "id": "user-admin-1",
+      "username": "Admin",
+      "name": "Administrador Demo",
+      "email": "admin@example.com",
+      "password": "$2a$10$lys0FaUtDzs3dpCGML.1c.4MP9jZF/RLXqrJ8IMLOD1muPVhOEbG6",
+      "role": "admin",
+      "active": true,
+      "createdAt": "2026-09-14T23:33:04.543Z",
+      "updatedAt": "2026-09-16T02:51:38.964Z"
+    },
+    {
+      "id": "user-normal-1",
+      "username": "User",
+      "name": "Usuario",
+      "email": "user@example.com",
+      "password": "$2a$10$hiJ4fh3icLaewjPIg1J.t.rk502TeI0QBQn2rbTONbnYRKE8Yh/Cy",
+      "role": "user",
+      "active": true,
+      "createdAt": "2026-09-14T23:33:04.550Z",
+      "updatedAt": "2026-09-16T02:51:48.798Z"
+    },
+    {
+      "id": "user-1789527138282",
+      "username": "User02",
+      "name": "Nuevo Usuario",
+      "email": "usuario2@example.com",
+      "password": "$2a$10$wqLryRjtLuO9JFOGr7F6be9rC6qyGYeV5vrbKYv3eVaenEL51hQcm",
+      "role": "user",
+      "active": false,
+      "createdAt": "2026-09-16T02:52:18.391Z",
+      "updatedAt": "2026-09-16T05:38:26.778Z"
+    }
+  ],
+  "notes": [
+    {
+      "id": "note-3",
+      "title": "Entorno Local Docker",
+      "text": "Se ha implementado un entorno de desarrollo con Docker",
+      "status": "Hecho",
+      "x": 327,
+      "y": 40,
+      "color": "#bbf7d0",
+      "createdAt": "2026-09-14T23:33:04.550Z",
+      "updatedAt": "2026-09-16T19:08:22.170Z"
+    },
+    {
+      "id": "note-1789507053049-lz54",
+      "title": "Nueva nota",
+      "text": "¡Las notas se pueden editar y mover libremente!",
+      "status": "Hecho",
+      "color": "var(--postit-green)",
+      "createdBy": "Usuario Invitado",
+      "createdAt": "2026-09-15T21:17:33.049Z",
+      "updatedAt": "2026-09-16T19:09:15.125Z",
+      "x": 397,
+      "y": 283
+    },
+    {
+      "id": "note-1789507104509-6k3j",
+      "title": "Integracion",
+      "text": "Se ha implementado un frontend en ReactJS y Backend con ExpressJS",
+      "status": "En curso",
+      "color": "var(--postit-blue)",
+      "createdBy": "Usuario Invitado",
+      "createdAt": "2026-09-15T21:18:24.509Z",
+      "updatedAt": "2026-09-16T19:08:56.385Z",
+      "x": 80,
+      "y": 280
+    },
+    {
+      "id": "note-1789507128579-qikr",
+      "title": "Bienvenida",
+      "text": "Bienvenido al aplicativo Conotes",
+      "status": "Pendiente",
+      "color": "var(--postit-pink)",
+      "createdBy": "Usuario Invitado",
+      "createdAt": "2026-09-15T21:18:48.579Z",
+      "updatedAt": "2026-09-16T19:06:53.082Z",
+      "x": 40,
+      "y": 40
+    }
+  ]
+}
